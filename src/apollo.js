@@ -1,5 +1,6 @@
 import ApolloClient from "apollo-boost";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { PERSISTED_SEARCH_QUERY } from "./modules/Queries";
 
 export const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -11,6 +12,13 @@ const client = new ApolloClient({
         authorization: `bearer ${process.env.REACT_APP_GITHUB_TOKEN}`
       }
     });
+  }
+});
+
+cache.writeQuery({
+  query: PERSISTED_SEARCH_QUERY,
+  data: {
+    searchQuery: ""
   }
 });
 

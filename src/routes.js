@@ -1,5 +1,5 @@
-import Search from "./modules/Search";
-import Detail from "./modules/Detail";
+import Search from "./modules/search";
+import Detail from "./modules/detail";
 
 export default [
   {
