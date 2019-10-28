@@ -74,9 +74,7 @@ const Detail = props => {
   return !loading && data ? (
     <Paper className={classes.root} elevation={4}>
       <div className={classes.header}>
-        <Typography variant="h5">
-          {data.repository.owner.login}/{data.repository.name}
-        </Typography>
+        <Typography variant="h5">{data.repository.nameWithOwner}</Typography>
         <Link
           className={classes.repoLink}
           href={data.repository.url}
@@ -84,7 +82,7 @@ const Detail = props => {
           target="_blank"
           variant="body2"
         >
-          {data.repository.homepageUrl}
+          {data.repository.url}
         </Link>
         <Divider className={classes.divider} />
       </div>

@@ -3,8 +3,8 @@ import gql from "graphql-tag";
 export const REPOSITORY = gql`
   query Repository($owner: String!, $name: String!) {
     repository(owner: $owner, name: $name) {
+      id
       description
-      homepageUrl
       languages(first: 10) {
         edges {
           node {
@@ -17,6 +17,7 @@ export const REPOSITORY = gql`
         }
       }
       name
+      nameWithOwner
       owner {
         login
       }
@@ -37,20 +38,12 @@ export const SEARCH = gql`
             id
             name
             nameWithOwner
-            openGraphImageUrl
             owner {
               login
             }
           }
         }
       }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-      repositoryCount
     }
   }
 `;
