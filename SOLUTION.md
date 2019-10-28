@@ -7,15 +7,10 @@
 
 ### Possible Iterations
 
-* Better utilize the Apollo cache for displaying detail pages with fewer http requests
 * Search Pagination
-* Include more information in the search results list
 * Search autocomplete and/or as-you-type search
-* Move search input to a separate component
-* Replace "Loading..." messages with a progress bar or spinner
-* Include more information in the Detail component
-* Refactor the Detail component into 2-3 separate components (Header, Content, Actions? might be overkill) to clean things up
 * Better evaluate conditional rendering logic
+* Improve responsive support
 * Add tests where appropriate
 
 ### Packages Used
@@ -25,11 +20,10 @@
 * `graphql`
 * `graphql-tag`
 * `idx.macro`
-* `react-router-dom`
 * `@material-ui/core` et al.
 
 ### Comments
 
-The Github GraphQL API leaves a lot of room for experimentation, but I stuck to the assignment as I understood it.  I think with the features of the API and given infinite time to iterate I would eventually build Github.
+The Github GraphQL API leaves a lot of room for experimentation, and in this branch I decided to explore a bit.
 
-It would be pretty straightforward roadmap to improve the search UI, followed by search results pagination, a more verbose detail page, and finally some polish all around.
+I used expansion panels rather than an external component to improve the UX of the search results.  I heavily utilized composition so that hypothetically one could re-add the details page pretty quickly by utilizing the `RepositoryDetails` component.  I also added some simple responsive elements to the search results and detail display panels as well as more information about the repository (issues, prs, forks).
