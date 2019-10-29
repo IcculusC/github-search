@@ -10,8 +10,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { GoRepoForked, GoStar } from "react-icons/go";
-import { RepoNode } from "../common";
-import RepositoryDetails from "./RepositoryDetails";
+import { RepoNode } from "../../common";
+import { RepositoryDetails } from "../../repository";
 
 const useStyles = makeStyles(theme => ({
   details: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   },
   name: {
     textOverflow: "ellipsis"
+  },
+  paper: {
+    padding: theme.spacing(2)
   }
 }));
 
@@ -48,7 +51,7 @@ const ResultsListItem = props => {
         classes={{ content: classes.summary }}
         expandIcon={<ExpandMoreIcon />}
       >
-        <Typography className={classes.name} variant="h6">
+        <Typography className={classes.name} variant={small ? "body1" : "h6"}>
           {node.nameWithOwner}
         </Typography>
         <Toolbar className={classes.toolbar} variant="dense">

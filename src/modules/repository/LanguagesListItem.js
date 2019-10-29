@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Language = props => {
-  const { node } = props;
   const classes = useStyles(props);
+  const { node } = props;
 
   return <Typography className={classes.language}>{node.name}</Typography>;
 };

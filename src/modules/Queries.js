@@ -1,8 +1,28 @@
 import gql from "graphql-tag";
 
 export const SEARCH = gql`
-  query Search($first: Int!, $query: String!) {
-    search(first: $first, query: $query, type: REPOSITORY) {
+  query Search(
+    $first: Int
+    $last: Int
+    $query: String!
+    $after: String
+    $before: String
+  ) {
+    search(
+      first: $first
+      last: $last
+      query: $query
+      type: REPOSITORY
+      after: $after
+      before: $before
+    ) {
+      repositoryCount
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
       edges {
         node {
           ... on Repository {

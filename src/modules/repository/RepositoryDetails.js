@@ -43,11 +43,14 @@ const useStyles = makeStyles(theme => ({
     "& svg": {
       marginRight: theme.spacing(1)
     }
+  },
+  description: {
+    paddingBottom: theme.spacing(2)
   }
 }));
 
 const RepositoryDetails = props => {
-  const classes = useStyles();
+  const classes = useStyles(props);
   const { node } = props;
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
@@ -55,7 +58,7 @@ const RepositoryDetails = props => {
   useEffect(() => {
     if (node) {
       setDescription(
-        sanitizeHtml(marky(node.description), { allowedTags: [] })
+        sanitizeHtml(marky(node.description || ""), { allowedTags: [] })
       );
     }
   }, [node]);
@@ -63,6 +66,22 @@ const RepositoryDetails = props => {
   return (
     <React.Fragment>
       <div className={classes.details}>
+        {small ? (
+          <React.Fragment>
+            <Link
+              href={node.url}
+              rel="noopener noreferrer"
+              target="_blank"
+              variant="subtitle1"
+            >
+              {node.url}
+            </Link>
+            <Divider className={classes.divider} />
+            <Typography className={classes.description} variant="body1">
+              {description}
+            </Typography>
+          </React.Fragment>
+        ) : null}
         {small ? (
           <div className={classes.stars}>
             <GoStar />
@@ -82,16 +101,22 @@ const RepositoryDetails = props => {
           {node.forkCount} forks
         </Typography>
       </div>
-      <Link
-        href={node.url}
-        rel="noopener noreferrer"
-        target="_blank"
-        variant="subtitle1"
-      >
-        {node.url}
-      </Link>
-      <Divider className={classes.divider} />
-      <Typography variant="body1">{description}</Typography>
+      {!small ? (
+        <React.Fragment>
+          <Link
+            href={node.url}
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="subtitle1"
+          >
+            {node.url}
+          </Link>
+          <Divider className={classes.divider} />
+          <Typography className={classes.description} variant="body1">
+            {description}
+          </Typography>
+        </React.Fragment>
+      ) : null}
       <LanguagesList edges={node.languages.edges} />
     </React.Fragment>
   );

@@ -5,30 +5,53 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   root: {
     alignItems: "center",
-    background: theme.palette.primary.main,
+    background: props => {
+      switch (props.color) {
+        case "primary":
+          return theme.palette.primary.main;
+        case "secondary":
+          return theme.palette.secondary.main;
+        default:
+          return undefined;
+      }
+    },
     boxSizing: "border-box",
     display: "flex",
     maxWidth: 600,
-    padding: "2px 4px",
+    paddingBottom: 4,
     width: "100%"
   },
   iconButton: {
-    color: theme.palette.primary.contrastText,
+    color: props => {
+      switch (props.color) {
+        case "primary":
+          return theme.palette.primary.contrastText;
+        case "secondary":
+          return theme.palette.primary.contrastText;
+        default:
+          return undefined;
+      }
+    },
     marginRight: theme.spacing(1),
     position: "relative"
   },
-  progress: {
-    position: "absolute"
-  },
   input: {
-    color: theme.palette.primary.contrastText,
+    color: props => {
+      switch (props.color) {
+        case "primary":
+          return theme.palette.primary.contrastText;
+        case "secondary":
+          return theme.palette.primary.contrastText;
+        default:
+          return undefined;
+      }
+    },
     flex: 1,
-    paddingLeft: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
     "& input[type=text]::placeholder": {
       opacity: 0.75
     }
@@ -36,10 +59,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SearchInput = props => {
-  const classes = useStyles();
-  const { loading, onChange, onSearch, square, value } = props;
+  const classes = useStyles(props);
+  const { onChange, onSearch, value } = props;
   return (
-    <Paper square={square} className={classes.root} elevation={0}>
+    <Paper square className={classes.root} elevation={0}>
       <InputBase
         autoFocus
         className={classes.input}
@@ -59,25 +82,21 @@ const SearchInput = props => {
         onClick={() => onSearch()}
       >
         <SearchIcon />
-        {loading ? (
-          <CircularProgress className={classes.progress} color="secondary" />
-        ) : null}
       </IconButton>
     </Paper>
   );
 };
 
 SearchInput.propTypes = {
-  loading: PropTypes.bool,
+  color: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
-  square: PropTypes.bool,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string
 };
 
 SearchInput.defaultProps = {
-  loading: false,
-  square: false
+  color: "default",
+  value: ""
 };
 
 export default SearchInput;

@@ -11,7 +11,7 @@ const theme = createMuiTheme({
       main: "hsla(200, 85%, 40%, 1)"
     },
     secondary: {
-      main: "hsla(40, 85%, 65%, 1)"
+      main: "hsla(40, 70%, 55%, 1)"
     },
     text: {
       primary: "hsla(195, 80%, 10%, 1)"

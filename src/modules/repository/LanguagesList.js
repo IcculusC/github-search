@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import makeStyles from "@material-ui/styles/makeStyles";
-import LanguageListItem from "./LanguageListItem";
+import LanguagesListItem from "./LanguagesListItem";
 import { LanguageNode } from "../common";
 
 const useStyles = makeStyles(theme => ({
@@ -9,8 +9,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "flex",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
-    marginTop: theme.spacing(2)
+    justifyContent: "flex-start"
   }
 }));
 
@@ -21,7 +20,7 @@ const LanguagesList = props => {
   return (
     <div className={classes.root}>
       {edges.map(({ node }) => (
-        <LanguageListItem key={node.id} node={node} />
+        <LanguagesListItem key={node.id} node={node} />
       ))}
     </div>
   );

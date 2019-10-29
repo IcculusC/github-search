@@ -4,7 +4,7 @@ import makeStyles from "@material-ui/styles/makeStyles";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import ResultsListItem from "./ResultsListItem";
-import { RepoNode } from "../common";
+import { RepoNode } from "../../common";
 
 const useStyles = makeStyles(theme => ({
   root: {
