@@ -1,9 +1,9 @@
 import React from "react";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
-import { LanguageNode } from "../common";
+import { ILanguageNode } from '../common';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, ILanguagesListItemProps>((theme: Theme) => ({
   language: {
     alignItems: "baseline",
     display: "inline-flex",
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     userSelect: "none",
 
     "&:before": {
-      background: props => props.node.color,
+      background: (props) => props.node.color,
       borderRadius: theme.spacing(1),
       boxShadow:
         "0px 1px 2px hsla(0, 0%, 50%, 0.35),0px 1px 5px hsla(0, 0%, 50%, 0.7)",
@@ -26,15 +26,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Language = props => {
+export interface ILanguagesListItemProps {
+  node: ILanguageNode
+}
+
+const Language = (props: ILanguagesListItemProps) => {
   const classes = useStyles(props);
   const { node } = props;
 
   return <Typography className={classes.language}>{node.name}</Typography>;
-};
-
-Language.propTypes = {
-  node: LanguageNode.isRequired
 };
 
 export default Language;

@@ -1,12 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, ISearchInputProps>(theme => ({
   root: {
     alignItems: "center",
     background: props => {
@@ -58,7 +57,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SearchInput = props => {
+export interface ISearchInputProps {
+  color?: string,
+  onChange: (e: React.SyntheticEvent) => void,
+  onSearch: () => void,
+  value?: string
+}
+
+const SearchInput = (props: ISearchInputProps) => {
   const classes = useStyles(props);
   const { onChange, onSearch, value } = props;
   return (
@@ -85,18 +91,6 @@ const SearchInput = props => {
       </IconButton>
     </Paper>
   );
-};
-
-SearchInput.propTypes = {
-  color: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  onSearch: PropTypes.func.isRequired,
-  value: PropTypes.string
-};
-
-SearchInput.defaultProps = {
-  color: "default",
-  value: ""
 };
 
 export default SearchInput;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import useTheme from "@material-ui/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import marky from "marky-markdown";
@@ -14,9 +14,9 @@ import {
   GoStar
 } from "react-icons/go";
 import LanguagesList from "./LanguagesList";
-import { RepoNode } from "../common";
+import { IRepositoryNode } from '../common';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, IRepositoryDetailsProps>((theme: Theme) => ({
   details: {
     alignItems: "center",
     display: "flex",
@@ -49,10 +49,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RepositoryDetails = props => {
+export interface IRepositoryDetailsProps {
+  node: IRepositoryNode
+}
+
+const RepositoryDetails = (props: IRepositoryDetailsProps) => {
   const classes = useStyles(props);
   const { node } = props;
-  const theme = useTheme();
+  const theme: Theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   const [description, setDescription] = useState("");
   useEffect(() => {
@@ -120,10 +124,6 @@ const RepositoryDetails = props => {
       <LanguagesList edges={node.languages.edges} />
     </React.Fragment>
   );
-};
-
-RepositoryDetails.propTypes = {
-  node: RepoNode.isRequired
 };
 
 export default RepositoryDetails;

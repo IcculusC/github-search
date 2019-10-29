@@ -1,19 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import makeStyles from '@material-ui/core/styles/makeStyles'
 import LanguagesListItem from "./LanguagesListItem";
-import { LanguageNode } from "../common";
+import { ILanguageNode } from '../common'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
-    flexDirection: "flex",
     flexWrap: "wrap",
     justifyContent: "flex-start"
   }
 }));
 
-const LanguagesList = props => {
+export interface ILanguagesListProps {
+  edges: [{ node: ILanguageNode }]
+}
+
+const LanguagesList = (props: ILanguagesListProps) => {
   const classes = useStyles(props);
   const { edges } = props;
 
@@ -24,14 +26,6 @@ const LanguagesList = props => {
       ))}
     </div>
   );
-};
-
-LanguagesList.propTypes = {
-  edges: PropTypes.arrayOf(
-    PropTypes.shape({
-      node: LanguageNode
-    })
-  ).isRequired
 };
 
 export default LanguagesList;

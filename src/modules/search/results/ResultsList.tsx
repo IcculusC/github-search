@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import ResultsListItem from "./ResultsListItem";
-import { RepoNode } from "../../common";
+import { IRepositoryNode } from "../../common";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: "hsla(200, 85%, 98%, 1)",
     boxSizing: "border-box",
@@ -19,14 +18,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Results = props => {
-  const classes = useStyles(props);
-  const { edges, show } = props;
-  const [expanded, setExpanded] = useState(-1);
+export interface IResultsProps {
+  edges: [{ node: IRepositoryNode }],
+  show?: boolean
+}
 
-  function onChange(id, expanded) {
+const Results = (props: IResultsProps) => {
+  const classes = useStyles(props);
+  const { edges, show = false } = props;
+  const [expanded, setExpanded] = useState<string>("-1");
+
+  function onChange(id: string, expanded: boolean) {
     if (!expanded) {
-      setExpanded(-1);
+      setExpanded("-1");
     } else {
       setExpanded(id);
     }
@@ -34,7 +38,7 @@ const Results = props => {
 
   return (
     <Collapse className={classes.root} in={show}>
-      {edges && edges.length === 0 ? (
+      {edges && !edges.length ? (
         <Typography className={classes.emptyState} variant="h6">
           Oh no! This is the empty state...
         </Typography>
@@ -51,19 +55,6 @@ const Results = props => {
         : null}
     </Collapse>
   );
-};
-
-Results.propTypes = {
-  edges: PropTypes.arrayOf(
-    PropTypes.shape({
-      node: RepoNode
-    })
-  ).isRequired,
-  show: PropTypes.bool
-};
-
-Results.defaultProps = {
-  show: false
 };
 
 export default Results;

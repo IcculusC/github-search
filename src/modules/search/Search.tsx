@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLazyQuery } from "@apollo/react-hooks";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import idx from "idx.macro";
@@ -8,7 +8,7 @@ import { SEARCH } from "../Queries";
 import SearchWidget from "./widget";
 import { ResultsList } from "./results";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     alignItems: "center",
     display: "flex",
@@ -20,8 +20,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Search = props => {
-  const classes = useStyles(props);
+const Search = () => {
+  const classes = useStyles();
   const [searchQuery, setSearchQuery] = useState("");
   const [pageInfo, setPageInfo] = useState({});
   const [search, { called, data, loading, fetchMore }] = useLazyQuery(SEARCH, {
@@ -36,7 +36,7 @@ const Search = props => {
   const edges = idx(data, _ => _.search.edges) || [];
   const repositoryCount = idx(data, _ => _.search.repositoryCount) || 0;
 
-  function onFetchMore(variables) {
+  function onFetchMore(variables: any) {
     fetchMore({
       variables,
       updateQuery: (prev, { fetchMoreResult }) => {

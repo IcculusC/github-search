@@ -1,12 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
+import { IPaginationInfo } from "../../common";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, ISearchPaginationProps>((theme: Theme) => ({
   root: {
     alignItems: "center",
     background: props => {
@@ -57,11 +57,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SearchPagination = props => {
+export interface ISearchPaginationProps {
+  color?: string,
+  onPageDown: () => void,
+  onPageUp: () =>  void,
+  pageInfo: IPaginationInfo,
+  repositoryCount: number
+}
+
+const SearchPagination = (props: ISearchPaginationProps) => {
   const classes = useStyles(props);
   const { onPageDown, onPageUp, pageInfo, repositoryCount } = props;
 
-  function onChange(direction) {
+  function onChange(direction: string) {
     if (!direction) return;
     if (direction === "down") {
       onPageDown();
@@ -71,7 +79,7 @@ const SearchPagination = props => {
   }
 
   return (
-    <div className={classes.root} variant="dense">
+    <div className={classes.root}>
       <IconButton
         className={classes.iconButton}
         disabled={!pageInfo.hasPreviousPage}
@@ -91,23 +99,6 @@ const SearchPagination = props => {
       </IconButton>
     </div>
   );
-};
-
-SearchPagination.propTypes = {
-  color: PropTypes.string,
-  onPageDown: PropTypes.func.isRequired,
-  onPageUp: PropTypes.func.isRequired,
-  pageInfo: PropTypes.shape({
-    endCursor: PropTypes.string,
-    hasNextPage: PropTypes.bool,
-    hasPreviousPage: PropTypes.bool,
-    startCursor: PropTypes.string
-  }).isRequired,
-  repositoryCount: PropTypes.number.isRequired
-};
-
-SearchPagination.defaultProps = {
-  color: "default"
 };
 
 export default SearchPagination;
