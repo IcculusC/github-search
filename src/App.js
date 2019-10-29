@@ -8,7 +8,13 @@ import Search from "./modules/search";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "hsla(195, 70%, 35%, 1)"
+      main: "hsla(200, 85%, 40%, 1)"
+    },
+    secondary: {
+      main: "hsla(40, 85%, 65%, 1)"
+    },
+    text: {
+      primary: "hsla(195, 80%, 10%, 1)"
     }
   }
 });

@@ -1,24 +1,21 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import makeStyles from "@material-ui/styles/makeStyles";
-import Paper from "@material-ui/core/Paper";
+import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import ResultsListItem from "./ResultsListItem";
 import { RepoNode } from "../common";
 
 const useStyles = makeStyles(theme => ({
   root: {
+    background: "hsla(200, 85%, 98%, 1)",
     boxSizing: "border-box",
-    marginTop: theme.spacing(4),
     maxWidth: 600,
     width: "100%"
   },
   emptyState: {
     color: theme.palette.text.hint,
     padding: theme.spacing(4)
-  },
-  tableRow: {
-    cursor: "pointer"
   }
 }));
 
@@ -36,13 +33,13 @@ const Results = props => {
   }
 
   return (
-    <Paper className={classes.root} elevation={4}>
-      {show && edges && edges.length === 0 ? (
+    <Collapse className={classes.root} in={show}>
+      {edges && edges.length === 0 ? (
         <Typography className={classes.emptyState} variant="h6">
           Oh no! This is the empty state...
         </Typography>
       ) : null}
-      {show && edges && edges.length
+      {edges && edges.length
         ? edges.map(({ node }) => (
             <ResultsListItem
               expanded={expanded === node.id}
@@ -52,7 +49,7 @@ const Results = props => {
             />
           ))
         : null}
-    </Paper>
+    </Collapse>
   );
 };
 

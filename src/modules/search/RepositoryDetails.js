@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import makeStyles from "@material-ui/styles/makeStyles";
 import useTheme from "@material-ui/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import marky from "marky-markdown";
+import sanitizeHtml from "sanitize-html";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
@@ -46,9 +48,17 @@ const useStyles = makeStyles(theme => ({
 
 const RepositoryDetails = props => {
   const classes = useStyles();
+  const { node } = props;
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
-  const { node } = props;
+  const [description, setDescription] = useState("");
+  useEffect(() => {
+    if (node) {
+      setDescription(
+        sanitizeHtml(marky(node.description), { allowedTags: [] })
+      );
+    }
+  }, [node]);
 
   return (
     <React.Fragment>
@@ -81,7 +91,7 @@ const RepositoryDetails = props => {
         {node.url}
       </Link>
       <Divider className={classes.divider} />
-      <Typography variant="body1">{node.description}</Typography>
+      <Typography variant="body1">{description}</Typography>
       <LanguagesList edges={node.languages.edges} />
     </React.Fragment>
   );

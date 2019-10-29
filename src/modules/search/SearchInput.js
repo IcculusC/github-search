@@ -5,10 +5,12 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   root: {
     alignItems: "center",
+    background: theme.palette.primary.main,
     boxSizing: "border-box",
     display: "flex",
     maxWidth: 600,
@@ -16,19 +18,28 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   iconButton: {
-    padding: theme.spacing(1.5)
+    color: theme.palette.primary.contrastText,
+    marginRight: theme.spacing(1),
+    position: "relative"
+  },
+  progress: {
+    position: "absolute"
   },
   input: {
+    color: theme.palette.primary.contrastText,
     flex: 1,
-    paddingLeft: theme.spacing(1)
+    paddingLeft: theme.spacing(1),
+    "& input[type=text]::placeholder": {
+      opacity: 0.75
+    }
   }
 }));
 
 const SearchInput = props => {
   const classes = useStyles();
-  const { onChange, onSearch, value } = props;
+  const { loading, onChange, onSearch, square, value } = props;
   return (
-    <Paper className={classes.root} elevation={4}>
+    <Paper square={square} className={classes.root} elevation={0}>
       <InputBase
         autoFocus
         className={classes.input}
@@ -42,17 +53,31 @@ const SearchInput = props => {
         type="text"
         value={value}
       />
-      <IconButton className={classes.iconButton} onClick={() => onSearch()}>
+      <IconButton
+        centerRipple
+        className={classes.iconButton}
+        onClick={() => onSearch()}
+      >
         <SearchIcon />
+        {loading ? (
+          <CircularProgress className={classes.progress} color="secondary" />
+        ) : null}
       </IconButton>
     </Paper>
   );
 };
 
 SearchInput.propTypes = {
+  loading: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
+  square: PropTypes.bool,
   value: PropTypes.string.isRequired
+};
+
+SearchInput.defaultProps = {
+  loading: false,
+  square: false
 };
 
 export default SearchInput;
