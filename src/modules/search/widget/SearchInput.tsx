@@ -5,6 +5,13 @@ import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
 
+export interface ISearchInputProps {
+  color?: string;
+  onChange: (e: React.SyntheticEvent) => void;
+  onSearch: () => void;
+  value?: string;
+}
+
 const useStyles = makeStyles<Theme, ISearchInputProps>(theme => ({
   root: {
     alignItems: "center",
@@ -57,16 +64,9 @@ const useStyles = makeStyles<Theme, ISearchInputProps>(theme => ({
   }
 }));
 
-export interface ISearchInputProps {
-  color?: string,
-  onChange: (e: React.SyntheticEvent) => void,
-  onSearch: () => void,
-  value?: string
-}
-
 const SearchInput = (props: ISearchInputProps) => {
   const classes = useStyles(props);
-  const { onChange, onSearch, value } = props;
+  const { onChange, onSearch, value }: ISearchInputProps = props;
   return (
     <Paper square className={classes.root} elevation={0}>
       <InputBase
@@ -91,6 +91,11 @@ const SearchInput = (props: ISearchInputProps) => {
       </IconButton>
     </Paper>
   );
+};
+
+SearchInput.defaultProps = {
+  color: "",
+  value: ""
 };
 
 export default SearchInput;

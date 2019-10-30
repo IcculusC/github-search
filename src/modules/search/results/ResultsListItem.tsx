@@ -9,10 +9,16 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { GoRepoForked, GoStar } from "react-icons/go";
-import { IRepositoryNode } from "../../common";
+import { IRepositoryNode } from "../../Queries";
 import { RepositoryDetails } from "../../repository";
 
-const useStyles = makeStyles<Theme, IResultsListProps>((theme: Theme) => ({
+export interface IResultsListItemProps {
+  expanded?: boolean;
+  node: IRepositoryNode;
+  onChange: (id: string, expanded: boolean) => void;
+}
+
+const useStyles = makeStyles<Theme, IResultsListItemProps>((theme: Theme) => ({
   details: {
     display: "flex",
     flexDirection: "column"
@@ -35,17 +41,11 @@ const useStyles = makeStyles<Theme, IResultsListProps>((theme: Theme) => ({
   }
 }));
 
-export interface IResultsListProps {
-  expanded?: boolean,
-  node: IRepositoryNode,
-  onChange: (id: string, expanded: boolean) => void
-}
-
-const ResultsListItem = (props: IResultsListProps) => {
+const ResultsListItem = (props: IResultsListItemProps) => {
   const classes = useStyles(props);
   const theme: Theme = useTheme();
-  const small = useMediaQuery(theme.breakpoints.down("sm"));
-  const { expanded = false, node, onChange } = props;
+  const small = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
+  const { expanded = false, node, onChange }: IResultsListItemProps = props;
 
   return (
     <ExpansionPanel

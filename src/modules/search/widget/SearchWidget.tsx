@@ -7,6 +7,14 @@ import Paper from "@material-ui/core/Paper";
 import SearchInput, { ISearchInputProps } from "./SearchInput";
 import SearchPagination, { ISearchPaginationProps } from "./SearchPagination";
 
+export interface ISearchWidgetProps {
+  color?: string;
+  loading?: boolean;
+  SearchInputProps: ISearchInputProps;
+  SearchPaginationProps: ISearchPaginationProps;
+  showPagination?: boolean;
+}
+
 const useStyles = makeStyles<Theme, ISearchWidgetProps>((theme: Theme) => ({
   root: {
     alignItems: "center",
@@ -52,14 +60,6 @@ const useStyles = makeStyles<Theme, ISearchWidgetProps>((theme: Theme) => ({
   }
 }));
 
-export interface ISearchWidgetProps {
-  color?: string,
-  loading?: boolean,
-  SearchInputProps: ISearchInputProps,
-  SearchPaginationProps: ISearchPaginationProps,
-  showPagination?: boolean
-}
-
 const SearchWidget = (props: ISearchWidgetProps) => {
   const classes = useStyles(props);
   const {
@@ -68,7 +68,7 @@ const SearchWidget = (props: ISearchWidgetProps) => {
     showPagination,
     SearchInputProps,
     SearchPaginationProps
-  } = props;
+  }: ISearchWidgetProps = props;
 
   return (
     <Paper square className={classes.root} elevation={0}>

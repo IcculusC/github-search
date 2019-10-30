@@ -3,7 +3,12 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import ResultsListItem from "./ResultsListItem";
-import { IRepositoryNode } from "../../common";
+import { IRepositoryEdge } from "../../Queries";
+
+export interface IResultsListProps {
+  edges: IRepositoryEdge[];
+  show?: boolean;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,17 +23,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface IResultsProps {
-  edges: [{ node: IRepositoryNode }],
-  show?: boolean
-}
-
-const Results = (props: IResultsProps) => {
+const Results = (props: IResultsListProps) => {
   const classes = useStyles(props);
-  const { edges, show = false } = props;
+  const { edges, show = false }: IResultsListProps = props;
   const [expanded, setExpanded] = useState<string>("-1");
 
-  function onChange(id: string, expanded: boolean) {
+  function onChange(id: string, expanded: boolean): void {
     if (!expanded) {
       setExpanded("-1");
     } else {
@@ -44,7 +44,7 @@ const Results = (props: IResultsProps) => {
         </Typography>
       ) : null}
       {edges && edges.length
-        ? edges.map(({ node }) => (
+        ? edges.map(({ node }: IRepositoryEdge) => (
             <ResultsListItem
               expanded={expanded === node.id}
               key={node.id}

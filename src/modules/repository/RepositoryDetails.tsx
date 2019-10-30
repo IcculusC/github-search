@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import useTheme from "@material-ui/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import marky from "marky-markdown";
@@ -14,52 +14,54 @@ import {
   GoStar
 } from "react-icons/go";
 import LanguagesList from "./LanguagesList";
-import { IRepositoryNode } from '../common';
-
-const useStyles = makeStyles<Theme, IRepositoryDetailsProps>((theme: Theme) => ({
-  details: {
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(1),
-    "& span svg": {
-      marginRight: theme.spacing(1),
-      transform: "translateY(2px)"
-    },
-    [theme.breakpoints.down("sm")]: {
-      alignItems: "flex-start",
-      flexDirection: "column"
-    }
-  },
-  divider: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1)
-  },
-  stars: {
-    alignItems: "center",
-    display: "flex",
-    marginBottom: theme.spacing(2),
-    "& svg": {
-      marginRight: theme.spacing(1)
-    }
-  },
-  description: {
-    paddingBottom: theme.spacing(2)
-  }
-}));
+import { IRepositoryNode } from "../Queries";
 
 export interface IRepositoryDetailsProps {
-  node: IRepositoryNode
+  node: IRepositoryNode;
 }
+
+const useStyles = makeStyles<Theme, IRepositoryDetailsProps>(
+  (theme: Theme) => ({
+    details: {
+      alignItems: "center",
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(1),
+      "& span svg": {
+        marginRight: theme.spacing(1),
+        transform: "translateY(2px)"
+      },
+      [theme.breakpoints.down("sm")]: {
+        alignItems: "flex-start",
+        flexDirection: "column"
+      }
+    },
+    divider: {
+      marginBottom: theme.spacing(1),
+      marginTop: theme.spacing(1)
+    },
+    stars: {
+      alignItems: "center",
+      display: "flex",
+      marginBottom: theme.spacing(2),
+      "& svg": {
+        marginRight: theme.spacing(1)
+      }
+    },
+    description: {
+      paddingBottom: theme.spacing(2)
+    }
+  })
+);
 
 const RepositoryDetails = (props: IRepositoryDetailsProps) => {
   const classes = useStyles(props);
-  const { node } = props;
+  const { node }: IRepositoryDetailsProps = props;
   const theme: Theme = useTheme();
-  const small = useMediaQuery(theme.breakpoints.down("sm"));
-  const [description, setDescription] = useState("");
-  useEffect(() => {
+  const small = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
+  const [description, setDescription] = useState<string>("");
+  useEffect((): void => {
     if (node) {
       setDescription(
         sanitizeHtml(marky(node.description || ""), { allowedTags: [] })

@@ -1,7 +1,11 @@
 import React from "react";
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import LanguagesListItem from "./LanguagesListItem";
-import { ILanguageNode } from '../common'
+import { ILanguagesEdge } from "../Queries";
+
+export interface ILanguagesListProps {
+  edges: ILanguagesEdge[];
+}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -11,17 +15,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export interface ILanguagesListProps {
-  edges: [{ node: ILanguageNode }]
-}
-
 const LanguagesList = (props: ILanguagesListProps) => {
   const classes = useStyles(props);
-  const { edges } = props;
+  const { edges }: ILanguagesListProps = props;
 
   return (
     <div className={classes.root}>
-      {edges.map(({ node }) => (
+      {edges.map(({ node }: ILanguagesEdge) => (
         <LanguagesListItem key={node.id} node={node} />
       ))}
     </div>

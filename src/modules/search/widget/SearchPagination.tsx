@@ -4,7 +4,15 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
-import { IPaginationInfo } from "../../common";
+import { IPaginationInfo } from "../../Queries";
+
+export interface ISearchPaginationProps {
+  color?: string;
+  onPageDown: () => void;
+  onPageUp: () => void;
+  pageInfo: IPaginationInfo;
+  repositoryCount: number;
+}
 
 const useStyles = makeStyles<Theme, ISearchPaginationProps>((theme: Theme) => ({
   root: {
@@ -57,19 +65,16 @@ const useStyles = makeStyles<Theme, ISearchPaginationProps>((theme: Theme) => ({
   }
 }));
 
-export interface ISearchPaginationProps {
-  color?: string,
-  onPageDown: () => void,
-  onPageUp: () =>  void,
-  pageInfo: IPaginationInfo,
-  repositoryCount: number
-}
-
 const SearchPagination = (props: ISearchPaginationProps) => {
   const classes = useStyles(props);
-  const { onPageDown, onPageUp, pageInfo, repositoryCount } = props;
+  const {
+    onPageDown,
+    onPageUp,
+    pageInfo,
+    repositoryCount
+  }: ISearchPaginationProps = props;
 
-  function onChange(direction: string) {
+  function onChange(direction: string): void {
     if (!direction) return;
     if (direction === "down") {
       onPageDown();
