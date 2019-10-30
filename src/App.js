@@ -1,25 +1,30 @@
 import React from "react";
 import { ApolloProvider } from "@apollo/react-hooks";
-import { Router, Route, Switch } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import client from "./apollo";
-import routes from "./routes";
-import Container from "./modules/Container";
+import Search from "./modules/search";
 
-const history = createBrowserHistory();
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "hsla(200, 85%, 40%, 1)"
+    },
+    secondary: {
+      main: "hsla(40, 70%, 55%, 1)"
+    },
+    text: {
+      primary: "hsla(195, 80%, 10%, 1)"
+    }
+  }
+});
 
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Container>
-        <Router history={history}>
-          <Switch>
-            {routes.map((route, index) => (
-              <Route key={index} {...route} />
-            ))}
-          </Switch>
-        </Router>
-      </Container>
+      <ThemeProvider theme={theme}>
+        <Search />
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

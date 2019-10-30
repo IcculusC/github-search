@@ -1,95 +1,96 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useApolloClient, useLazyQuery, useQuery } from "@apollo/react-hooks";
-import idx from "idx.macro";
+import React, { useState } from "react";
+import { useLazyQuery } from "@apollo/react-hooks";
 import makeStyles from "@material-ui/styles/makeStyles";
-import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
+import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-import SearchIcon from "@material-ui/icons/Search";
-import { PERSISTED_SEARCH_QUERY, SEARCH } from "../Queries";
-import Results from "./Results";
+import idx from "idx.macro";
+import { SEARCH } from "../Queries";
+import SearchWidget from "./widget";
+import { ResultsList } from "./results";
 
-const useStyles = makeStyles({
-  root: {
+const useStyles = makeStyles(theme => ({
+  container: {
     alignItems: "center",
-    background: "hsla(195, 100%, 98%, 0.75)",
-    boxSizing: "border-box",
     display: "flex",
-    maxWidth: 600,
-    padding: "2px 4px",
-    width: "100%"
-  },
-  iconButton: {
-    padding: 10
-  },
-  input: {
-    flex: 1,
-    marginLeft: 8
+    flexDirection: "column",
+    justifyContent: "center",
+    margin: `${theme.spacing(8)}px auto`,
+    overflow: "hidden",
+    padding: 0
   }
-});
+}));
 
 const Search = props => {
-  const { history } = props;
   const classes = useStyles(props);
-  const client = useApolloClient();
   const [searchQuery, setSearchQuery] = useState("");
-  const [search, { called, data, loading }] = useLazyQuery(SEARCH, {
-    skip: !searchQuery,
-    variables: {
-      query: searchQuery,
-      first: 10
-    }
+  const [pageInfo, setPageInfo] = useState({});
+  const [search, { called, data, loading, fetchMore }] = useLazyQuery(SEARCH, {
+    onCompleted: data => {
+      if (data.search.pageInfo) {
+        setPageInfo(data.search.pageInfo);
+      }
+    },
+    notifyOnNetworkStatusChange: true
   });
-  const { data: persistedQueryData } = useQuery(PERSISTED_SEARCH_QUERY);
-  useEffect(() => {
-    if (persistedQueryData && persistedQueryData.searchQuery) {
-      setSearchQuery(persistedQueryData.searchQuery);
-      search({ variables: { query: persistedQueryData.searchQuery } });
-    }
-  }, [persistedQueryData, search, setSearchQuery]);
 
   const edges = idx(data, _ => _.search.edges) || [];
+  const repositoryCount = idx(data, _ => _.search.repositoryCount) || 0;
 
-  function onSelect(...args) {
-    client.writeQuery({
-      query: PERSISTED_SEARCH_QUERY,
-      data: { searchQuery }
+  function onFetchMore(variables) {
+    fetchMore({
+      variables,
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        setPageInfo(fetchMoreResult.search.pageInfo);
+        return fetchMoreResult;
+      }
     });
-    history.push(...args);
   }
 
   return (
-    <React.Fragment>
-      <Paper className={classes.root} elevation={4}>
-        <InputBase
-          autoFocus
-          className={classes.input}
-          onChange={e => setSearchQuery(e.target.value)}
-          onKeyDown={e => {
-            if (e.key === "Enter") {
-              search({ variables: { query: searchQuery } });
-            }
-          }}
-          placeholder='Search Github repositories and press Enter... try "apollo-client"'
-          value={searchQuery}
-        />
-        <IconButton
-          className={classes.iconButton}
-          onClick={() => search({ variables: { query: searchQuery } })}
-        >
-          <SearchIcon />
-        </IconButton>
-      </Paper>
-      <Results edges={edges} onSelect={onSelect} show={!loading && called} />
-    </React.Fragment>
+    <Container
+      square
+      className={classes.container}
+      component={Paper}
+      elevation={4}
+      maxWidth="sm"
+    >
+      <SearchWidget
+        color="primary"
+        SearchInputProps={{
+          onChange: e => setSearchQuery(e.target.value),
+          onSearch: () => {
+            setPageInfo({});
+            search({ variables: { query: searchQuery, first: 10 } });
+          },
+          value: searchQuery
+        }}
+        SearchPaginationProps={{
+          pageInfo,
+          repositoryCount,
+          onPageDown: () =>
+            onFetchMore({
+              after: null,
+              before: pageInfo.startCursor,
+              first: null,
+              last: 10,
+              query: searchQuery
+            }),
+          onPageUp: () =>
+            onFetchMore({
+              after: pageInfo.endCursor,
+              before: null,
+              first: 10,
+              last: null,
+              query: searchQuery
+            })
+        }}
+        loading={loading}
+        showPagination={!!data}
+      />
+      <ResultsList edges={edges} show={called && !!data} />
+    </Container>
   );
-};
-
-Search.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  }).isRequired
 };
 
 export default Search;
