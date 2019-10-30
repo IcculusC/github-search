@@ -8,6 +8,7 @@ import { IPaginationInfo } from "../../Queries";
 
 export interface ISearchPaginationProps {
   color?: string;
+  loading?: boolean;
   onPageDown: () => void;
   onPageUp: () => void;
   pageInfo: IPaginationInfo;
@@ -68,6 +69,7 @@ const useStyles = makeStyles<Theme, ISearchPaginationProps>((theme: Theme) => ({
 const SearchPagination = (props: ISearchPaginationProps) => {
   const classes = useStyles(props);
   const {
+    loading,
     onPageDown,
     onPageUp,
     pageInfo,
@@ -87,7 +89,7 @@ const SearchPagination = (props: ISearchPaginationProps) => {
     <div className={classes.root}>
       <IconButton
         className={classes.iconButton}
-        disabled={!pageInfo.hasPreviousPage}
+        disabled={!pageInfo.hasPreviousPage || loading}
         onClick={() => onChange("down")}
       >
         <ChevronLeft />
@@ -97,7 +99,7 @@ const SearchPagination = (props: ISearchPaginationProps) => {
       </Typography>
       <IconButton
         className={classes.iconButton}
-        disabled={!pageInfo.hasNextPage}
+        disabled={!pageInfo.hasNextPage || loading}
         onClick={() => onChange("up")}
       >
         <ChevronRight />

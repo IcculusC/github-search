@@ -72,6 +72,7 @@ const Search = () => {
           value: searchQuery
         }}
         SearchPaginationProps={{
+          loading,
           pageInfo,
           repositoryCount,
           onPageDown: () =>
