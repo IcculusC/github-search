@@ -44,7 +44,7 @@ const useStyles = makeStyles<Theme, IResultsListItemProps>((theme: Theme) => ({
 const ResultsListItem = (props: IResultsListItemProps) => {
   const classes = useStyles(props);
   const theme: Theme = useTheme();
-  const small = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
+  const small: boolean = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
   const { expanded = false, node, onChange }: IResultsListItemProps = props;
 
   return (

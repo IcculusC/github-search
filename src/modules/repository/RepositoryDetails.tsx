@@ -59,7 +59,7 @@ const RepositoryDetails = (props: IRepositoryDetailsProps) => {
   const classes = useStyles(props);
   const { node }: IRepositoryDetailsProps = props;
   const theme: Theme = useTheme();
-  const small = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
+  const small: boolean = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
   const [description, setDescription] = useState<string>("");
   useEffect((): void => {
     if (node) {
