@@ -42,8 +42,9 @@ const Search = () => {
     notifyOnNetworkStatusChange: true
   });
 
-  const edges = idx(data, _ => _.search.edges) || [];
-  const repositoryCount = idx(data, _ => _.search.repositoryCount) || 0;
+  const edges: IRepositoryEdge[] = (idx(data, _ => _.search.edges) ||
+    []) as IRepositoryEdge[];
+  const repositoryCount: number = idx(data, _ => _.search.repositoryCount) || 0;
 
   function onFetchMore(variables: any) {
     fetchMore({
@@ -95,7 +96,7 @@ const Search = () => {
         loading={loading}
         showPagination={!!data}
       />
-      <ResultsList edges={edges as IRepositoryEdge[]} show={called && !!data} />
+      <ResultsList edges={edges} show={called && !!data} />
     </Paper>
   );
 };
