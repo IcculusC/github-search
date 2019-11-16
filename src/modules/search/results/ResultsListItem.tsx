@@ -1,6 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import useTheme from "@material-ui/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
@@ -10,10 +9,16 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { GoRepoForked, GoStar } from "react-icons/go";
-import { RepoNode } from "../../common";
+import { IRepositoryNode } from "../../Queries";
 import { RepositoryDetails } from "../../repository";
 
-const useStyles = makeStyles(theme => ({
+export interface IResultsListItemProps {
+  expanded?: boolean;
+  node: IRepositoryNode;
+  onChange: (id: string, expanded: boolean) => void;
+}
+
+const useStyles = makeStyles<Theme, IResultsListItemProps>((theme: Theme) => ({
   details: {
     display: "flex",
     flexDirection: "column"
@@ -36,11 +41,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ResultsListItem = props => {
+const ResultsListItem = (props: IResultsListItemProps) => {
   const classes = useStyles(props);
-  const theme = useTheme();
-  const small = useMediaQuery(theme.breakpoints.down("sm"));
-  const { expanded, node, onChange } = props;
+  const theme: Theme = useTheme();
+  const small: boolean = useMediaQuery<Theme>(theme.breakpoints.down("sm"));
+  const { expanded = false, node, onChange }: IResultsListItemProps = props;
 
   return (
     <ExpansionPanel
@@ -69,18 +74,6 @@ const ResultsListItem = props => {
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
-};
-
-ResultsListItem.propTypes = {
-  expanded: PropTypes.bool,
-  node: RepoNode.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
-ResultsListItem.defaultProps = {
-  expanded: false,
-  forkCount: 0,
-  isFork: false
 };
 
 export default ResultsListItem;

@@ -1,31 +1,40 @@
 import React, { useState } from "react";
 import { useLazyQuery } from "@apollo/react-hooks";
-import makeStyles from "@material-ui/styles/makeStyles";
-import Container from "@material-ui/core/Container";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import idx from "idx.macro";
-import { SEARCH } from "../Queries";
+import {
+  SEARCH,
+  IPaginationInfo,
+  IRepositoryEdge,
+  ISearchResultsReponse,
+  ISearchVariables
+} from "../Queries";
 import SearchWidget from "./widget";
 import { ResultsList } from "./results";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     margin: `${theme.spacing(8)}px auto`,
+    maxWidth: 600,
     overflow: "hidden",
     padding: 0
   }
 }));
 
-const Search = props => {
-  const classes = useStyles(props);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [pageInfo, setPageInfo] = useState({});
-  const [search, { called, data, loading, fetchMore }] = useLazyQuery(SEARCH, {
-    onCompleted: data => {
+const Search = () => {
+  const classes = useStyles();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [pageInfo, setPageInfo] = useState<IPaginationInfo>({});
+  const [search, { called, data, loading, fetchMore }] = useLazyQuery<
+    ISearchResultsReponse,
+    ISearchVariables
+  >(SEARCH, {
+    onCompleted: (data: ISearchResultsReponse) => {
       if (data.search.pageInfo) {
         setPageInfo(data.search.pageInfo);
       }
@@ -33,13 +42,17 @@ const Search = props => {
     notifyOnNetworkStatusChange: true
   });
 
-  const edges = idx(data, _ => _.search.edges) || [];
-  const repositoryCount = idx(data, _ => _.search.repositoryCount) || 0;
+  const edges: IRepositoryEdge[] = (idx(data, _ => _.search.edges) ||
+    []) as IRepositoryEdge[];
+  const repositoryCount: number = idx(data, _ => _.search.repositoryCount) || 0;
 
-  function onFetchMore(variables) {
+  function onFetchMore(variables: any) {
     fetchMore({
       variables,
-      updateQuery: (prev, { fetchMoreResult }) => {
+      updateQuery: (
+        prev: ISearchResultsReponse,
+        { fetchMoreResult }: { fetchMoreResult?: ISearchResultsReponse }
+      ) => {
         if (!fetchMoreResult) return prev;
         setPageInfo(fetchMoreResult.search.pageInfo);
         return fetchMoreResult;
@@ -48,17 +61,11 @@ const Search = props => {
   }
 
   return (
-    <Container
-      square
-      className={classes.container}
-      component={Paper}
-      elevation={4}
-      maxWidth="sm"
-    >
+    <Paper square className={classes.container} elevation={4}>
       <SearchWidget
         color="primary"
         SearchInputProps={{
-          onChange: e => setSearchQuery(e.target.value),
+          onChange: e => setSearchQuery((e.target as HTMLInputElement).value),
           onSearch: () => {
             setPageInfo({});
             search({ variables: { query: searchQuery, first: 10 } });
@@ -66,6 +73,7 @@ const Search = props => {
           value: searchQuery
         }}
         SearchPaginationProps={{
+          loading,
           pageInfo,
           repositoryCount,
           onPageDown: () =>
@@ -89,7 +97,7 @@ const Search = props => {
         showPagination={!!data}
       />
       <ResultsList edges={edges} show={called && !!data} />
-    </Container>
+    </Paper>
   );
 };
 

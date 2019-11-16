@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import ResultsListItem from "./ResultsListItem";
-import { RepoNode } from "../../common";
+import { IRepositoryEdge } from "../../Queries";
 
-const useStyles = makeStyles(theme => ({
+export interface IResultsListProps {
+  edges: IRepositoryEdge[];
+  show?: boolean;
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: "hsla(200, 85%, 98%, 1)",
     boxSizing: "border-box",
@@ -19,14 +23,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Results = props => {
+const Results = (props: IResultsListProps) => {
   const classes = useStyles(props);
-  const { edges, show } = props;
-  const [expanded, setExpanded] = useState(-1);
+  const { edges, show = false }: IResultsListProps = props;
+  const [expanded, setExpanded] = useState<string>("-1");
 
-  function onChange(id, expanded) {
+  function onChange(id: string, expanded: boolean): void {
     if (!expanded) {
-      setExpanded(-1);
+      setExpanded("-1");
     } else {
       setExpanded(id);
     }
@@ -34,13 +38,13 @@ const Results = props => {
 
   return (
     <Collapse className={classes.root} in={show}>
-      {edges && edges.length === 0 ? (
+      {edges && !edges.length ? (
         <Typography className={classes.emptyState} variant="h6">
           Oh no! This is the empty state...
         </Typography>
       ) : null}
       {edges && edges.length
-        ? edges.map(({ node }) => (
+        ? edges.map(({ node }: IRepositoryEdge) => (
             <ResultsListItem
               expanded={expanded === node.id}
               key={node.id}
@@ -51,19 +55,6 @@ const Results = props => {
         : null}
     </Collapse>
   );
-};
-
-Results.propTypes = {
-  edges: PropTypes.arrayOf(
-    PropTypes.shape({
-      node: RepoNode
-    })
-  ).isRequired,
-  show: PropTypes.bool
-};
-
-Results.defaultProps = {
-  show: false
 };
 
 export default Results;

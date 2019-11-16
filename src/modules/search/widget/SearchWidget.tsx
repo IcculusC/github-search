@@ -1,14 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import makeStyles from "@material-ui/styles/makeStyles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
-import SearchInput from "./SearchInput";
-import SearchPagination from "./SearchPagination";
+import SearchInput, { ISearchInputProps } from "./SearchInput";
+import SearchPagination, { ISearchPaginationProps } from "./SearchPagination";
 
-const useStyles = makeStyles(theme => ({
+export interface ISearchWidgetProps {
+  color?: string;
+  loading?: boolean;
+  SearchInputProps: ISearchInputProps;
+  SearchPaginationProps: ISearchPaginationProps;
+  showPagination?: boolean;
+}
+
+const useStyles = makeStyles<Theme, ISearchWidgetProps>((theme: Theme) => ({
   root: {
     alignItems: "center",
     background: props => {
@@ -53,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SearchWidget = props => {
+const SearchWidget = (props: ISearchWidgetProps) => {
   const classes = useStyles(props);
   const {
     color,
@@ -61,7 +68,7 @@ const SearchWidget = props => {
     showPagination,
     SearchInputProps,
     SearchPaginationProps
-  } = props;
+  }: ISearchWidgetProps = props;
 
   return (
     <Paper square className={classes.root} elevation={0}>
@@ -78,30 +85,6 @@ const SearchWidget = props => {
       </Collapse>
     </Paper>
   );
-};
-
-SearchWidget.propTypes = {
-  color: PropTypes.string,
-  SearchInputProps: PropTypes.shape({
-    onChange: PropTypes.func.isRequired,
-    onSearch: PropTypes.func.isRequired,
-    value: PropTypes.string
-  }).isRequired,
-  SearchPaginationProps: PropTypes.shape({
-    onPageDown: PropTypes.func.isRequired,
-    onPageUp: PropTypes.func.isRequired,
-    pageInfo: PropTypes.shape({
-      endCursor: PropTypes.string,
-      hasNextPage: PropTypes.bool,
-      hasPreviousPage: PropTypes.bool,
-      startCursor: PropTypes.string
-    }).isRequired,
-    repositoryCount: PropTypes.number.isRequired
-  }).isRequired
-};
-
-SearchWidget.defaultProps = {
-  color: "default"
 };
 
 export default SearchWidget;
